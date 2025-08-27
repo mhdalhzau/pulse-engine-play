@@ -74,37 +74,21 @@ export type Database = {
     }
     Functions: {
       upsert_laporan_harian: {
-        Args:
-          | {
-              p_cash?: number
-              p_id: string
-              p_jam_kerja: string
-              p_nomor_akhir?: number
-              p_nomor_awal?: number
-              p_pu?: number
-              p_qris?: number
-              p_shift: number
-              p_tanggal: string
-              p_total_keseluruhan?: number
-              p_total_liter?: number
-              p_total_setoran?: number
-              p_user_id: string
-            }
-          | {
-              p_cash?: number
-              p_id: string
-              p_jam_kerja: string
-              p_nomor_akhir?: number
-              p_nomor_awal?: number
-              p_pu?: number
-              p_qris?: number
-              p_shift: number
-              p_tanggal: string
-              p_total_keseluruhan?: number
-              p_total_liter?: number
-              p_total_setoran?: number
-              p_user_id: string
-            }
+        Args: {
+          p_cash?: number
+          p_id: string
+          p_jam_kerja: string
+          p_nomor_akhir?: number
+          p_nomor_awal?: number
+          p_pu?: number
+          p_qris?: number
+          p_shift: number
+          p_tanggal: string
+          p_total_keseluruhan?: number
+          p_total_liter?: number
+          p_total_setoran?: number
+          p_user_id: string
+        }
         Returns: {
           cash: number | null
           created_at: string | null
