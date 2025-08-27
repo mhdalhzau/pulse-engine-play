@@ -21,7 +21,7 @@ interface PUItem {
   updated_at: string;
   profiles?: {
     name: string;
-  };
+  } | null;
 }
 
 const PUDashboard = () => {
@@ -40,10 +40,7 @@ const PUDashboard = () => {
       setLoading(true);
       let query = supabase
         .from('pu_items')
-        .select(`
-          *,
-          profiles(name)
-        `);
+        .select('*');
 
       if (sortField) {
         query = query.order(sortField, { ascending: sortOrder === "asc" });
@@ -206,7 +203,7 @@ const PUDashboard = () => {
                     <TableRow key={item.id}>
                       <TableCell>{item.tanggal}</TableCell>
                       <TableCell>Shift {item.shift}</TableCell>
-                      <TableCell>{item.profiles?.name || 'Unknown User'}</TableCell>
+                      <TableCell>User {item.user_id.substring(0, 8)}...</TableCell>
                       <TableCell>{item.keterangan}</TableCell>
                       <TableCell>{formatCurrency(item.nominal)}</TableCell>
                       <TableCell>{formatDate(item.created_at)}</TableCell>

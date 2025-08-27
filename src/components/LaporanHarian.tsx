@@ -11,7 +11,7 @@ import { CalendarDays, Clock, Fuel, DollarSign, FileImage, Share2, Save, Plus, M
 import html2canvas from "html2canvas";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Helper: normalisasi angka desimal - deteksi otomatis . dan , sebagai desimal
 function parseDecimal(input: string | number): number {
@@ -47,6 +47,7 @@ interface LaporanData {
 export default function LaporanHarian() {
   const { toast } = useToast();
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const today = new Date();
   const options: Intl.DateTimeFormatOptions = { weekday: "long", day: "numeric", month: "long", year: "numeric" };
   const formattedDate = today.toLocaleDateString("id-ID", options);
@@ -530,6 +531,26 @@ export default function LaporanHarian() {
               >
                 <FileImage className="h-4 w-4 mr-2" />
                 Export Image
+              </Button>
+            </div>
+            
+            {/* Dashboard Navigation Buttons */}
+            <div className="flex flex-col sm:flex-row gap-2 pt-4 border-t">
+              <Button
+                onClick={() => navigate('/dashboard')}
+                variant="outline"
+                className="flex-1"
+              >
+                <BarChart3 className="mr-2 h-4 w-4" />
+                Dashboard Laporan
+              </Button>
+              <Button
+                onClick={() => navigate('/pu-dashboard')}
+                variant="outline"
+                className="flex-1"
+              >
+                <BarChart3 className="mr-2 h-4 w-4" />
+                Dashboard PU
               </Button>
             </div>
           </CardContent>

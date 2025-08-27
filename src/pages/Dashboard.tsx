@@ -13,19 +13,23 @@ import { Link } from "react-router-dom";
 
 interface LaporanData {
   id: string;
+  user_id: string;
   tanggal: string;
   shift: number;
   jam_kerja: string;
-  nomor_awal: number;
-  nomor_akhir: number;
-  total_liter: number;
-  total_setoran: number;
-  qris: number;
-  cash: number;
-  pu: number;
-  total_keseluruhan: number;
+  nomor_awal?: number;
+  nomor_akhir?: number;
+  total_liter?: number;
+  total_setoran?: number;
+  qris?: number;
+  cash?: number;
+  pu?: number;
+  total_keseluruhan?: number;
   created_at: string;
-  user_id: string;
+  updated_at: string;
+  profiles?: {
+    name: string;
+  } | null;
 }
 
 export default function Dashboard() {
@@ -201,12 +205,6 @@ export default function Dashboard() {
                     <TableRow>
                       <TableHead 
                         className="cursor-pointer hover:bg-muted"
-                        onClick={() => handleSort('id')}
-                      >
-                        ID Laporan
-                      </TableHead>
-                      <TableHead 
-                        className="cursor-pointer hover:bg-muted"
                         onClick={() => handleSort('tanggal')}
                       >
                         Tanggal
@@ -219,15 +217,54 @@ export default function Dashboard() {
                       </TableHead>
                       <TableHead 
                         className="cursor-pointer hover:bg-muted"
+                        onClick={() => handleSort('jam_kerja')}
+                      >
+                        Jam Kerja
+                      </TableHead>
+                      <TableHead>
+                        Nama
+                      </TableHead>
+                      <TableHead 
+                        className="cursor-pointer hover:bg-muted"
+                        onClick={() => handleSort('nomor_awal')}
+                      >
+                        Nomor Awal
+                      </TableHead>
+                      <TableHead 
+                        className="cursor-pointer hover:bg-muted"
+                        onClick={() => handleSort('nomor_akhir')}
+                      >
+                        Nomor Akhir
+                      </TableHead>
+                      <TableHead 
+                        className="cursor-pointer hover:bg-muted"
                         onClick={() => handleSort('total_liter')}
                       >
                         Total Liter
                       </TableHead>
                       <TableHead 
                         className="cursor-pointer hover:bg-muted"
+                        onClick={() => handleSort('cash')}
+                      >
+                        Cash
+                      </TableHead>
+                      <TableHead 
+                        className="cursor-pointer hover:bg-muted"
+                        onClick={() => handleSort('qris')}
+                      >
+                        QRIS
+                      </TableHead>
+                      <TableHead 
+                        className="cursor-pointer hover:bg-muted"
                         onClick={() => handleSort('total_setoran')}
                       >
-                        Total Setoran
+                        Total
+                      </TableHead>
+                      <TableHead 
+                        className="cursor-pointer hover:bg-muted"
+                        onClick={() => handleSort('pu')}
+                      >
+                        Total PU
                       </TableHead>
                       <TableHead 
                         className="cursor-pointer hover:bg-muted"
@@ -235,56 +272,30 @@ export default function Dashboard() {
                       >
                         Total Keseluruhan
                       </TableHead>
-                      <TableHead>User ID</TableHead>
-                      <TableHead 
-                        className="cursor-pointer hover:bg-muted"
-                        onClick={() => handleSort('created_at')}
-                      >
-                        Dibuat
-                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredData.map((item) => (
                       <TableRow key={item.id}>
-                        <TableCell className="font-mono text-sm">
-                          {item.id}
-                        </TableCell>
-                        <TableCell>
-                          <div>
-                            <div className="font-medium">{item.tanggal}</div>
-                            <div className="text-sm text-muted-foreground">{item.jam_kerja}</div>
-                          </div>
-                        </TableCell>
+                        <TableCell>{item.tanggal}</TableCell>
                         <TableCell>
                           <Badge variant={item.shift === 1 ? "default" : "secondary"}>
                             Shift {item.shift}
                           </Badge>
                         </TableCell>
-                        <TableCell>
-                          {item.total_liter?.toFixed(2)} L
-                        </TableCell>
-                        <TableCell>
-                          <div>
-                            <div className="font-medium">Rp {formatCurrency(item.total_setoran)}</div>
-                            <div className="text-xs text-muted-foreground">
-                              Cash: Rp {formatCurrency(item.cash)} | QRIS: Rp {formatCurrency(item.qris)}
-                            </div>
-                          </div>
-                        </TableCell>
+                        <TableCell>{item.jam_kerja}</TableCell>
+                        <TableCell>User {item.user_id.substring(0, 8)}...</TableCell>
+                        <TableCell>{item.nomor_awal || '-'}</TableCell>
+                        <TableCell>{item.nomor_akhir || '-'}</TableCell>
+                        <TableCell>{item.total_liter || '-'}</TableCell>
+                        <TableCell>Rp {formatCurrency(item.cash || 0)}</TableCell>
+                        <TableCell>Rp {formatCurrency(item.qris || 0)}</TableCell>
+                        <TableCell>Rp {formatCurrency(item.total_setoran || 0)}</TableCell>
+                        <TableCell>Rp {formatCurrency(item.pu || 0)}</TableCell>
                         <TableCell>
                           <div className="font-semibold text-primary">
-                            Rp {formatCurrency(item.total_keseluruhan)}
+                            Rp {formatCurrency(item.total_keseluruhan || 0)}
                           </div>
-                          <div className="text-xs text-muted-foreground">
-                            PU: Rp {formatCurrency(item.pu)}
-                          </div>
-                        </TableCell>
-                        <TableCell className="font-mono text-xs">
-                          {item.user_id.substring(0, 8)}...
-                        </TableCell>
-                        <TableCell className="text-sm">
-                          {formatDate(item.created_at)}
                         </TableCell>
                       </TableRow>
                     ))}
