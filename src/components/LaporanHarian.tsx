@@ -7,10 +7,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
-import { CalendarDays, Clock, Fuel, DollarSign, FileImage, Share2, Save, Plus, Minus, LogOut } from "lucide-react";
+import { CalendarDays, Clock, Fuel, DollarSign, FileImage, Share2, Save, Plus, Minus, LogOut, BarChart3 } from "lucide-react";
 import html2canvas from "html2canvas";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router-dom";
 
 // Helper: normalisasi angka desimal - deteksi otomatis . dan , sebagai desimal
 function parseDecimal(input: string | number): number {
@@ -288,15 +289,28 @@ export default function LaporanHarian() {
               <h1 className="text-3xl font-bold text-foreground mb-2">Setoran Harian</h1>
               <p className="text-muted-foreground">Kelola laporan setoran harian dengan mudah</p>
             </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => signOut()}
-              className="flex items-center gap-2"
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                asChild
+                className="flex items-center gap-2"
+              >
+                <Link to="/dashboard">
+                  <BarChart3 className="h-4 w-4" />
+                  Dashboard
+                </Link>
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => signOut()}
+                className="flex items-center gap-2"
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
+              </Button>
+            </div>
           </div>
           {user && (
             <div className="text-center text-sm text-muted-foreground">
