@@ -292,17 +292,6 @@ export default function LaporanHarian() {
             </div>
             <div className="flex items-center gap-2">
               <Button 
-                variant="secondary" 
-                size="sm" 
-                asChild
-                className="flex items-center gap-2"
-              >
-                <Link to="/dashboard">
-                  <BarChart3 className="h-4 w-4" />
-                  Dashboard
-                </Link>
-              </Button>
-              <Button 
                 variant="outline" 
                 size="sm" 
                 onClick={() => signOut()}
