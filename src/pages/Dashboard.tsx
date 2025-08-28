@@ -64,7 +64,7 @@ export default function Dashboard() {
         .from('laporan_harian')
         .select(`
           *,
-          profiles!inner(name, nickname)
+          profiles(name, nickname)
         `)
         .order(sortBy, { ascending: sortOrder === "asc" });
 

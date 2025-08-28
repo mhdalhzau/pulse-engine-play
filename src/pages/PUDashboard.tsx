@@ -43,7 +43,7 @@ const PUDashboard = () => {
         .from('pu_items')
         .select(`
           *,
-          profiles!inner(name, nickname)
+          profiles(name, nickname)
         `)
         .order('tanggal', { ascending: false })
         .order('shift', { ascending: false })
