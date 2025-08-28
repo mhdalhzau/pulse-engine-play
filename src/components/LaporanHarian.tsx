@@ -229,7 +229,7 @@ export default function LaporanHarian() {
       const reportId = generateReportId(data.jam);
       const jamKerja = getShiftDescription(data.jam);
 
-      // Use the upsert function to insert or update
+      // Use the upsert function to insert or update main report
       const { data: result, error } = await supabase.rpc('upsert_laporan_harian', {
         p_id: reportId,
         p_user_id: user.id,
@@ -248,6 +248,41 @@ export default function LaporanHarian() {
 
       if (error) {
         throw error;
+      }
+
+      // Delete existing PU items for this date and shift, then insert new ones
+      const { error: deleteError } = await supabase
+        .from('pu_items')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('tanggal', data.tanggal)
+        .eq('shift', parseInt(data.jam));
+
+      if (deleteError) {
+        throw deleteError;
+      }
+
+      // Insert new PU items if any
+      if (data.puItems.length > 0) {
+        const puItemsToInsert = data.puItems
+          .filter(item => item.keterangan.trim() !== '' || item.nominal > 0)
+          .map(item => ({
+            user_id: user.id,
+            tanggal: data.tanggal,
+            shift: parseInt(data.jam),
+            keterangan: item.keterangan.trim() || 'Tidak ada keterangan',
+            nominal: item.nominal || 0
+          }));
+
+        if (puItemsToInsert.length > 0) {
+          const { error: puError } = await supabase
+            .from('pu_items')
+            .insert(puItemsToInsert);
+
+          if (puError) {
+            throw puError;
+          }
+        }
       }
 
       toast({
