@@ -62,10 +62,7 @@ export default function Dashboard() {
       setLoading(true);
       const { data: laporanData, error } = await supabase
         .from('laporan_harian')
-        .select(`
-          *,
-          profiles(name, nickname)
-        `)
+        .select('*, profiles(name, nickname)')
         .order(sortBy, { ascending: sortOrder === "asc" });
 
       if (error) throw error;
@@ -92,7 +89,9 @@ export default function Dashboard() {
     const filtered = data.filter(item => 
       item.tanggal.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.user_id.toLowerCase().includes(searchTerm.toLowerCase())
+      item.user_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.profiles?.nickname?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.profiles?.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredData(filtered);
   }, [searchTerm, data]);
@@ -147,7 +146,7 @@ export default function Dashboard() {
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Cari berdasarkan tanggal, ID, atau User ID"
+                    placeholder="Cari berdasarkan tanggal, ID, atau Nickname"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-10"
@@ -288,7 +287,9 @@ export default function Dashboard() {
                           </Badge>
                         </TableCell>
                         <TableCell>{item.jam_kerja}</TableCell>
-                        <TableCell className="font-medium">{item.profiles?.nickname || item.profiles?.name || 'N/A'}</TableCell>
+                        <TableCell className="font-medium">
+                          {item.profiles?.nickname || item.profiles?.name || 'N/A'}
+                        </TableCell>
                         <TableCell>{item.nomor_awal || '-'}</TableCell>
                         <TableCell>{item.nomor_akhir || '-'}</TableCell>
                         <TableCell>{item.total_liter || '-'}</TableCell>

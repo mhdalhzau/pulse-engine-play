@@ -41,10 +41,7 @@ const PUDashboard = () => {
       setLoading(true);
       const { data, error } = await supabase
         .from('pu_items')
-        .select(`
-          *,
-          profiles(name, nickname)
-        `)
+        .select('*, profiles(name, nickname)')
         .order('tanggal', { ascending: false })
         .order('shift', { ascending: false })
         .order('created_at', { ascending: false });
@@ -73,6 +70,7 @@ const PUDashboard = () => {
     const filtered = puItems.filter((item) =>
       item.keterangan.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.profiles?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.profiles?.nickname?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.tanggal.includes(searchTerm)
     );
     setFilteredPuItems(filtered);
@@ -130,7 +128,7 @@ const PUDashboard = () => {
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Cari berdasarkan keterangan, nama, atau tanggal..."
+                  placeholder="Cari berdasarkan keterangan, nickname, atau tanggal..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -204,7 +202,9 @@ const PUDashboard = () => {
                     <TableRow key={item.id}>
                       <TableCell>{item.tanggal}</TableCell>
                       <TableCell>Shift {item.shift}</TableCell>
-                      <TableCell className="font-medium">{item.profiles?.nickname || item.profiles?.name || 'N/A'}</TableCell>
+                      <TableCell className="font-medium">
+                        {item.profiles?.nickname || item.profiles?.name || 'N/A'}
+                      </TableCell>
                       <TableCell>{item.keterangan}</TableCell>
                       <TableCell>{formatCurrency(item.nominal)}</TableCell>
                       <TableCell>{formatDate(item.created_at)}</TableCell>
