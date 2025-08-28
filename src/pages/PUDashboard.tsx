@@ -21,6 +21,7 @@ interface PUItem {
   updated_at: string;
   profiles?: {
     name: string;
+    nickname?: string;
   } | null;
 }
 
@@ -38,15 +39,15 @@ const PUDashboard = () => {
   const fetchPuData = async () => {
     try {
       setLoading(true);
-      let query = supabase
+      const { data, error } = await supabase
         .from('pu_items')
-        .select('*');
-
-      if (sortField) {
-        query = query.order(sortField, { ascending: sortOrder === "asc" });
-      }
-
-      const { data, error } = await query;
+        .select(`
+          *,
+          profiles!inner(name, nickname)
+        `)
+        .order('tanggal', { ascending: false })
+        .order('shift', { ascending: false })
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
 
@@ -185,7 +186,7 @@ const PUDashboard = () => {
                       Shift {sortField === 'shift' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </TableHead>
                     <TableHead className="cursor-pointer" onClick={() => handleSort('user_id')}>
-                      Nama {sortField === 'user_id' && (sortOrder === 'asc' ? '↑' : '↓')}
+                      Nickname {sortField === 'user_id' && (sortOrder === 'asc' ? '↑' : '↓')}
                     </TableHead>
                     <TableHead className="cursor-pointer" onClick={() => handleSort('keterangan')}>
                       Keterangan {sortField === 'keterangan' && (sortOrder === 'asc' ? '↑' : '↓')}
@@ -203,7 +204,7 @@ const PUDashboard = () => {
                     <TableRow key={item.id}>
                       <TableCell>{item.tanggal}</TableCell>
                       <TableCell>Shift {item.shift}</TableCell>
-                      <TableCell>User {item.user_id.substring(0, 8)}...</TableCell>
+                      <TableCell className="font-medium">{item.profiles?.nickname || item.profiles?.name || 'N/A'}</TableCell>
                       <TableCell>{item.keterangan}</TableCell>
                       <TableCell>{formatCurrency(item.nominal)}</TableCell>
                       <TableCell>{formatDate(item.created_at)}</TableCell>

@@ -29,6 +29,7 @@ interface LaporanData {
   updated_at: string;
   profiles?: {
     name: string;
+    nickname?: string;
   } | null;
 }
 
@@ -61,7 +62,10 @@ export default function Dashboard() {
       setLoading(true);
       const { data: laporanData, error } = await supabase
         .from('laporan_harian')
-        .select('*')
+        .select(`
+          *,
+          profiles!inner(name, nickname)
+        `)
         .order(sortBy, { ascending: sortOrder === "asc" });
 
       if (error) throw error;
@@ -222,7 +226,7 @@ export default function Dashboard() {
                         Jam Kerja
                       </TableHead>
                       <TableHead>
-                        Nama
+                        Nickname
                       </TableHead>
                       <TableHead 
                         className="cursor-pointer hover:bg-muted"
@@ -284,7 +288,7 @@ export default function Dashboard() {
                           </Badge>
                         </TableCell>
                         <TableCell>{item.jam_kerja}</TableCell>
-                        <TableCell>User {item.user_id.substring(0, 8)}...</TableCell>
+                        <TableCell className="font-medium">{item.profiles?.nickname || item.profiles?.name || 'N/A'}</TableCell>
                         <TableCell>{item.nomor_awal || '-'}</TableCell>
                         <TableCell>{item.nomor_akhir || '-'}</TableCell>
                         <TableCell>{item.total_liter || '-'}</TableCell>

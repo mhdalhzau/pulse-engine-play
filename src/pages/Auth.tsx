@@ -13,6 +13,7 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [nickname, setNickname] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
   const { toast } = useToast();
@@ -88,7 +89,7 @@ export default function Auth() {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password || !confirmPassword) {
+    if (!email || !password || !confirmPassword || !nickname) {
       toast({
         title: "Error",
         description: "Semua field harus diisi",
@@ -123,7 +124,10 @@ export default function Auth() {
         email,
         password,
         options: {
-          emailRedirectTo: redirectUrl
+          emailRedirectTo: redirectUrl,
+          data: {
+            nickname: nickname
+          }
         }
       });
 
@@ -153,6 +157,7 @@ export default function Auth() {
       setActiveTab("login");
       setPassword("");
       setConfirmPassword("");
+      setNickname("");
     } catch (error) {
       toast({
         title: "Error",
@@ -233,6 +238,18 @@ export default function Auth() {
 
               <TabsContent value="signup" className="space-y-4 mt-6">
                 <form onSubmit={handleSignUp} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-nickname">Nickname</Label>
+                    <Input
+                      id="signup-nickname"
+                      type="text"
+                      placeholder="Nama panggilan (tidak dienkripsi)"
+                      value={nickname}
+                      onChange={(e) => setNickname(e.target.value)}
+                      disabled={isLoading}
+                      required
+                    />
+                  </div>
                   <div className="space-y-2">
                     <Label htmlFor="signup-email">Email</Label>
                     <Input
